@@ -44,6 +44,7 @@ class SignupController < ApplicationController
       @user_creation.save
       common_data_url = CartoDB::Visualization::CommonDataService.build_url(self)
       ::Resque.enqueue(::Resque::UserJobs::Signup::NewUser, @user_creation.id, common_data_url)
+      @user.subscribe_to_notifications
       flash.now[:success] = 'User creation in progress'
       render action: 'signup_confirmation'
     else
